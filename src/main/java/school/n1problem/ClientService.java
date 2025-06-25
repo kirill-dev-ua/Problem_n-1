@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import school.n1problem.db.ClientRepository;
 import school.n1problem.dto.ClientDto;
@@ -19,7 +20,6 @@ public class ClientService {
 
     private final ClientRepository repository;
 
-    @Transactional()
     public ClientDto findById(Long id){
         Client client = repository.findById(id).orElseThrow(EntityNotFoundException::new);
         return mapClient(client);

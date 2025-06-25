@@ -1,5 +1,6 @@
 package school.n1problem.api;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +36,7 @@ public class ClientController {
     }
 
     @GetMapping("/clients")
+    @Transactional
     public List<ClientDto> getAllClients() {
         log.info("Called method getAllClients()");
 
@@ -50,21 +52,21 @@ public class ClientController {
         return dtoList;
     }
 
-    @GetMapping("/clients2")
-    public List<ClientDto2> getAllClients2() {
-        log.info("Called method getAllClients()");
-
-//        List<Client> clients = customClientRepository.findAllClientWithGraph();
-        List<Client> clients = clientRepository.findAll();
-//        List<Client> clients = clientRepository.findAllWithPaymentsWithGraph();
+//    @GetMapping("/clients2")
+//    public List<ClientDto2> getAllClients2() {
+//        log.info("Called method getAllClients()");
+//
+////        List<Client> clients = customClientRepository.findAllClientWithGraph();
 //        List<Client> clients = clientRepository.findAll();
-
-        var dtoList = clients.stream()
-                .map(this::mapClientToDto2)
-                .toList();
-        log.info("Method getAllClients() returning result");
-        return dtoList;
-    }
+////        List<Client> clients = clientRepository.findAllWithPaymentsWithGraph();
+////        List<Client> clients = clientRepository.findAll();
+//
+//        var dtoList = clients.stream()
+//                .map(this::mapClientToDto2)
+//                .toList();
+//        log.info("Method getAllClients() returning result");
+//        return dtoList;
+//    }
 
     private ClientDto mapClientToDto(Client client) {
 //        log.info("Mapping client to dto: clientId={}", client.getId());
@@ -82,13 +84,13 @@ public class ClientController {
         );
     }
 
-    private ClientDto2 mapClientToDto2(Client client) {
-//        log.info("Mapping client to dto: clientId={}", client.getId());
-        return new ClientDto2(
-                client.getId(),
-                client.getName()
-        );
-    }
+//    private ClientDto2 mapClientToDto2(Client client) {
+////        log.info("Mapping client to dto: clientId={}", client.getId());
+//        return new ClientDto2(
+//                client.getId(),
+//                client.getName()
+//        );
+//    }
 
     private PaymentDto mapPaymentToDto(Payment payment) {
         return new PaymentDto(
