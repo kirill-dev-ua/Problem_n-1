@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import school.n1problem.db.ClientRepository;
 import school.n1problem.dto.ClientDto;
+import school.n1problem.dto.ClientDto2;
 import school.n1problem.dto.PaymentDto;
 import school.n1problem.model.Client;
 import school.n1problem.model.Payment;
@@ -20,6 +21,7 @@ public class ClientService {
 
     private final ClientRepository repository;
 
+    @Transactional
     public ClientDto findById(Long id){
         Client client = repository.findById(id).orElseThrow(EntityNotFoundException::new);
         return mapClient(client);
@@ -34,6 +36,11 @@ public class ClientService {
                         .map(this::mapPaymentToDto)
                         .toList());
     }
+    private ClientDto2 map(Client client){
+        return new ClientDto2(
+                client.getId(),
+                client.getName());
+    }
 
     private PaymentDto mapPaymentToDto(Payment payment) {
         return new PaymentDto(
@@ -41,5 +48,19 @@ public class ClientService {
                 payment.getAmount(),
                 payment.getClientId()
         );
+    }
+
+
+//    public ClientDto2 update(Long id, ClientDto2 dto2) {
+//        Client client = repository.findById(id).get();
+//        client.setName(dto2.name());
+//        return map(client);
+//    }
+
+    public ClientDto2 update(Long id, ClientDto2 dto2) {
+        repository.deleteById(id);
+        Client client = new Client();
+        client.setName(dto2.name());
+        return map(client);
     }
 }

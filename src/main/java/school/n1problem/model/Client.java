@@ -37,11 +37,12 @@ public class Client {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String name;
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id")
-//    @Fetch(FetchMode.SUBSELECT)
+    @Fetch(FetchMode.SUBSELECT)
     private List<Payment> payments = new ArrayList<>();
 //
 //    @OneToMany(fetch = FetchType.LAZY)

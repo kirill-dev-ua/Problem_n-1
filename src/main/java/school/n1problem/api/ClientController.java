@@ -4,10 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import school.n1problem.ClientService;
 import school.n1problem.db.*;
 import school.n1problem.dto.ClientDto;
@@ -35,6 +32,11 @@ public class ClientController {
         return clientService.findById(id);
     }
 
+    @PutMapping("/clients/{id}")
+    public ClientDto2 putClientId(@PathVariable Long id, @RequestBody ClientDto2 dto2) {
+        return clientService.update(id, dto2);
+    }
+
     @GetMapping("/clients")
     @Transactional
     public List<ClientDto> getAllClients() {
@@ -42,8 +44,8 @@ public class ClientController {
 
 //        List<Client> clients = customClientRepository.findAllClientWithGraph();
 //        List<Client> clients = clientRepository.findAllWithPayments();
-        List<Client> clients = clientRepository.findAllWithPaymentsWithGraph();
-//        List<Client> clients = clientRepository.findAll();
+//        List<Client> clients = clientRepository.findAllWithPaymentsWithGraph();
+        List<Client> clients = clientRepository.findAll();
 
         var dtoList = clients.stream()
                 .map(this::mapClientToDto)
