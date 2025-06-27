@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -17,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "clients")
+//@DynamicUpdate
 //@NamedEntityGraph(
 //        name = "clients_with_payments",
 //        attributeNodes = {
@@ -40,7 +42,9 @@ public class Client {
     @Column(unique = true)
     private String name;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY,
+            cascade = CascadeType.MERGE,
+            orphanRemoval = true)
     @JoinColumn(name = "client_id")
     @Fetch(FetchMode.SUBSELECT)
     private List<Payment> payments = new ArrayList<>();

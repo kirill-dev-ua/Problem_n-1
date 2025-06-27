@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import school.n1problem.ClientService;
 import school.n1problem.db.*;
 import school.n1problem.dto.ClientDto;
-import school.n1problem.dto.ClientDto2;
 import school.n1problem.dto.OrderDto;
 import school.n1problem.dto.PaymentDto;
 import school.n1problem.model.Client;
@@ -27,14 +26,14 @@ public class ClientController {
     private final CustomClientRepository customClientRepository;
     private final ClientService clientService;
 
+    @PostMapping("/clients")
+    public void create(@RequestBody ClientDto dto) {
+        clientService.save(dto);
+    }
+
     @GetMapping("/clients/{id}")
     public ClientDto getClient(@PathVariable Long id) {
         return clientService.findById(id);
-    }
-
-    @PutMapping("/clients/{id}")
-    public ClientDto2 putClientId(@PathVariable Long id, @RequestBody ClientDto2 dto2) {
-        return clientService.update(id, dto2);
     }
 
     @GetMapping("/clients")
@@ -54,26 +53,8 @@ public class ClientController {
         return dtoList;
     }
 
-//    @GetMapping("/clients2")
-//    public List<ClientDto2> getAllClients2() {
-//        log.info("Called method getAllClients()");
-//
-////        List<Client> clients = customClientRepository.findAllClientWithGraph();
-//        List<Client> clients = clientRepository.findAll();
-////        List<Client> clients = clientRepository.findAllWithPaymentsWithGraph();
-////        List<Client> clients = clientRepository.findAll();
-//
-//        var dtoList = clients.stream()
-//                .map(this::mapClientToDto2)
-//                .toList();
-//        log.info("Method getAllClients() returning result");
-//        return dtoList;
-//    }
-
     private ClientDto mapClientToDto(Client client) {
-//        log.info("Mapping client to dto: clientId={}", client.getId());
         return new ClientDto(
-                client.getId(),
                 client.getName(),
                 client.getPayments()
                         .stream()
@@ -85,14 +66,6 @@ public class ClientController {
 //                        .collect(Collectors.toSet())
         );
     }
-
-//    private ClientDto2 mapClientToDto2(Client client) {
-////        log.info("Mapping client to dto: clientId={}", client.getId());
-//        return new ClientDto2(
-//                client.getId(),
-//                client.getName()
-//        );
-//    }
 
     private PaymentDto mapPaymentToDto(Payment payment) {
         return new PaymentDto(
@@ -108,6 +81,16 @@ public class ClientController {
                 order.getNumber(),
                 order.getClientId()
         );
+    }
+
+    @PutMapping("/{id}")
+    @Transactional
+    public Client update(@PathVariable Long id, @RequestBody ClientDto dto) {
+        Client existing = clientRepository.findById(id).orElseThrow();
+        existing.setName(dto.name());
+        existing.getPayments().get(0).setAmount(dto.payments().get(0).amount());
+        existing.getPayments().get(0).setAmount(dto.payments().get(1).amount());
+        return clientRepository.save(existing);
     }
 }
 
