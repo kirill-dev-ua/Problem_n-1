@@ -43,10 +43,9 @@ public class Client {
     private String name;
 
     @OneToMany(fetch = FetchType.LAZY,
-            cascade = CascadeType.MERGE,
+            cascade = CascadeType.REFRESH,
             orphanRemoval = true)
     @JoinColumn(name = "client_id")
-    @Fetch(FetchMode.SUBSELECT)
     private List<Payment> payments = new ArrayList<>();
 //
 //    @OneToMany(fetch = FetchType.LAZY)
