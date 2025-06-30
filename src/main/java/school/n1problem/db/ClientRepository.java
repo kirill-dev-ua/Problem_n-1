@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import school.n1problem.model.Client;
+import school.n1problem.model.Payment;
 
 import java.util.List;
 

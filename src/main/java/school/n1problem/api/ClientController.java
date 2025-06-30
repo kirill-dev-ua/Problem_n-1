@@ -38,5 +38,20 @@ public class ClientController {
     public ClientDto update(@PathVariable Long id, @RequestBody ClientDto dto) {
         return clientService.update(id, dto);
     }
+
+    @DeleteMapping("/remove/{id}")
+    public void remove(@PathVariable Long id) {
+        clientService.remove(id);
+    }
+
+    @PostMapping("/test-orphan/{clientId}")
+    public void testOrphan(@PathVariable Long clientId) {
+        clientService.testOrphanRemoval(clientId);
+    }
+
+    @DeleteMapping("/test-cascade/{id}")
+    public void testCascade(@PathVariable Long id) {
+        clientService.testCascadeRemove(id);
+    }
 }
 

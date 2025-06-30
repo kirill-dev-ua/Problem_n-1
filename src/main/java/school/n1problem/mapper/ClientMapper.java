@@ -1,5 +1,6 @@
 package school.n1problem.mapper;
 
+import org.mapstruct.Mapper;
 import school.n1problem.dto.ClientDto;
 import school.n1problem.dto.OrderDto;
 import school.n1problem.dto.PaymentDto;
@@ -7,6 +8,7 @@ import school.n1problem.model.Client;
 import school.n1problem.model.Order;
 import school.n1problem.model.Payment;
 
+@Mapper(componentModel = "spring")
 public class ClientMapper {
 
     public ClientDto mapClientToDto(Client client) {

@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import school.n1problem.api.ClientController;
 import school.n1problem.db.ClientRepository;
 import school.n1problem.db.CustomClientRepository;
 import school.n1problem.dto.ClientDto;
@@ -70,5 +69,27 @@ public class ClientService {
 
         Client saved = repository.save(client);
         return clientMapper.mapClientToDto(saved);
+    }
+
+    public void remove(Long id) {
+        repository.deleteById(id);
+    }
+
+    @Transactional
+    public void testOrphanRemoval(Long clientId) {
+        Client client = repository.findById(clientId)
+                .orElseThrow(() -> new IllegalArgumentException("Client not found: " + clientId));
+        List<Payment> payments = client.getPayments();
+        if (!payments.isEmpty()) {
+            Payment toRemove = payments.get(0);
+            client.getPayments().remove(toRemove);
+            toRemove.setClientId(null);
+        }
+    }
+
+    @Transactional
+    public void testCascadeRemove(Long clientId) {
+        Client client = repository.findById(clientId).orElseThrow();
+        repository.delete(client);
     }
 }
