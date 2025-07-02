@@ -20,9 +20,9 @@ public class Payment {
 
     private Double amount;
 
-    @Column(name = "client_id")
-    private Long clientId;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id")
+    private Client clientId;
 }
 
 

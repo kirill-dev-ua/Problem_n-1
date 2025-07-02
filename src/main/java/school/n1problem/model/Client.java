@@ -52,4 +52,14 @@ public class Client {
 //    @JoinColumn(name = "client_id")
 //    @Fetch(FetchMode.SUBSELECT)
 //    private Set<Order> orders = new HashSet<>();
+
+    public void addPayment(Payment payment) {
+        payments.add(payment);
+        payment.setClientId(this);
+    }
+
+    public void removePayment(Payment payment) {
+        payments.remove(payment);
+        payment.setClientId(null);
+    }
 }

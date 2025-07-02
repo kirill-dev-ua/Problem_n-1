@@ -49,7 +49,7 @@ public class ClientService {
 
         var clients = repository.findAll();
         var dtoList = clients.stream()
-                .map(clientMapper::mapClientToDto)
+                .map(ClientMapper::mapClientToDto)
                 .toList();
         return dtoList;
     }
@@ -76,15 +76,25 @@ public class ClientService {
     }
 
     @Transactional
-    public void testOrphanRemoval(Long clientId) {
+    public void testOrphanAdd(Long clientId, PaymentDto paymentDto) {
         Client client = repository.findById(clientId)
                 .orElseThrow(() -> new IllegalArgumentException("Client not found: " + clientId));
-        List<Payment> payments = client.getPayments();
-        if (!payments.isEmpty()) {
-            Payment toRemove = payments.get(0);
-            client.getPayments().remove(toRemove);
-            toRemove.setClientId(null);
-        }
+        Payment payment = clientMapper.toPayment(paymentDto);
+        client.addPayment(payment);
+    }
+
+    @Transactional
+    public void removePaymentFromClient(Long clientId, Long paymentId) {
+        Client client = repository.findById(clientId)
+                .orElseThrow(() -> new EntityNotFoundException("Client not found: " + clientId));
+
+        client.getPayments().stream()
+                .filter(p -> p.getId().equals(paymentId))
+                .findFirst()
+                .ifPresent(p -> {
+                    client.removePayment(p);
+                    log.info("Removed payment {} from client {}", paymentId, clientId);
+                });
     }
 
     @Transactional

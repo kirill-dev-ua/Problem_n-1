@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+import school.n1problem.dto.PaymentDto;
 import school.n1problem.service.ClientService;
 import school.n1problem.service.ClientService2;
 import school.n1problem.dto.ClientDto;
@@ -24,11 +25,6 @@ public class ClientController {
         clientService.save(dto);
     }
 
-    @GetMapping("/get1")
-    public void getClient() {
-        clientService2.method1();
-    }
-
     @GetMapping("/all")
     public List<ClientDto> getAllClients() {
         return clientService.findAllClients();
@@ -45,8 +41,13 @@ public class ClientController {
     }
 
     @PostMapping("/test-orphan/{clientId}")
-    public void testOrphan(@PathVariable Long clientId) {
-        clientService.testOrphanRemoval(clientId);
+    public void testOrphan(@PathVariable Long clientId, @RequestBody PaymentDto paymentDto) {
+        clientService.testOrphanAdd(clientId, paymentDto);
+    }
+
+    @DeleteMapping("/{clientId}/payments/{paymentId}")
+    public void removePayment(@PathVariable Long clientId, @PathVariable Long paymentId) {
+        clientService.removePaymentFromClient(clientId, paymentId);
     }
 
     @DeleteMapping("/test-cascade/{id}")
